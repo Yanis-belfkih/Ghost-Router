@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Cours\\B1\\Q2\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj": {}
+    "C:\\Users\\ilias\\Documents\\GitHub\\Ghost-Router\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj": {}
   },
   "projects": {
-    "C:\\Cours\\B1\\Q2\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj": {
+    "C:\\Users\\ilias\\Documents\\GitHub\\Ghost-Router\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Cours\\B1\\Q2\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj",
+        "projectUniqueName": "C:\\Users\\ilias\\Documents\\GitHub\\Ghost-Router\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj",
         "projectName": "Ghost-Router",
-        "projectPath": "C:\\Cours\\B1\\Q2\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj",
-        "packagesPath": "C:\\Users\\yanis\\.nuget\\packages\\",
-        "outputPath": "C:\\Cours\\B1\\Q2\\Ghost-Router\\Ghost-Router\\obj\\",
+        "projectPath": "C:\\Users\\ilias\\Documents\\GitHub\\Ghost-Router\\Ghost-Router\\Ghost-Router\\Ghost-Router.csproj",
+        "packagesPath": "C:\\Users\\ilias\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ilias\\Documents\\GitHub\\Ghost-Router\\Ghost-Router\\Ghost-Router\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\yanis\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ilias\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -74,7 +70,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.104/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
