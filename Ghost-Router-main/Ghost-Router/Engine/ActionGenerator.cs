@@ -9,23 +9,15 @@ namespace Ghost_Router.Engine
         {
             List<Node> neighbors = new List<Node>();
             
-            // On note quel est le PID sur lequel on est en train de travailler
             int currentPid = currentNode.ActivePID;
-            
-            // On lit le score de CE PID précis dans le carnet de notes
             int currentSuspicion = currentNode.ProcessGauges[currentPid];
 
-            // 1. Tenter d'avancer dans l'attaque (Action Directe)
             if (currentNode.CurrentStep == 0)
             {
                 if (currentSuspicion + 35 <= 100)
                 {
-                    // a) On crée le voisin. Il reçoit le carnet actuel et va le photocopier.
                     Node nextNode = new Node(1, currentPid, currentNode.ProcessGauges, currentNode.GCost + 35, 95, "Allocation Mémoire", currentNode);
-                    
-                    // b) On met à jour le score DANS LE NOUVEAU CARNET photocopié !
                     nextNode.ProcessGauges[currentPid] = currentSuspicion + 35;
-                    
                     neighbors.Add(nextNode);
                 }
             }
@@ -50,22 +42,25 @@ namespace Ghost_Router.Engine
                 }
             }
 
-            // 2. Tenter l'évasion (Process Hopping)
             if (currentNode.CurrentStep < 3)
             {
                 if (currentSuspicion + 10 <= 100)
                 {
-                    int newPid = currentPid + 1; // On invente le prochain PID (ex: 405)
+                    Random rand = new Random();
+                    
+                    List<int> pidsDisponibles = new List<int>(currentNode.ProcessGauges.Keys);
+                    
+                    pidsDisponibles.Remove(currentPid);
+                    
+                    int indexAleatoire = rand.Next(pidsDisponibles.Count);
+                    
+                    int newPid = pidsDisponibles[indexAleatoire];
+
                     int remainingDanger = CalculateHCost(currentNode.CurrentStep);
                     
                     Node jumpNode = new Node(currentNode.CurrentStep, newPid, currentNode.ProcessGauges, currentNode.GCost + 15, remainingDanger, "Saut vers PID " + newPid, currentNode);
                     
-                    // MISE A JOUR DU CARNET LORS D'UN SAUT :
-                    // 1. On applique la pénalité sur l'ancien processus (+10)
                     jumpNode.ProcessGauges[currentPid] = currentSuspicion + 10;
-                    
-                    // 2. On rajoute une nouvelle ligne dans le carnet pour le nouveau PID avec un score de 0
-                    jumpNode.ProcessGauges.Add(newPid, 0);
 
                     neighbors.Add(jumpNode);
                 }
@@ -76,10 +71,17 @@ namespace Ghost_Router.Engine
 
         private int CalculateHCost(int step)
         {
-            if (step == 0) return 130; 
-            if (step == 1) return 95;      
-            if (step == 2) return 50;           
-            return 0;
+            switch(step)
+            {
+                case 0: return 130;
+                
+                case 1: return 95;
+
+                case 2: return 50;
+
+                default : return 0;
+            }
+            
         }
     }
 }

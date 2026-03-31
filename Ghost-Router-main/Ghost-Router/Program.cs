@@ -1,12 +1,15 @@
 using Ghost_Router.Models;
 using Ghost_Router.Engine;
+using System.Collections.Generic;
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -18,26 +21,30 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
+// ==========================================
 // --- NOTRE TEST GHOST-ROUTER ---
+// ==========================================
 Console.WriteLine("=================================");
 Console.WriteLine("Lancement de l'IA Ghost-Router...");
 Console.WriteLine("=================================");
 
-// On fabrique le tout premier carnet
 Dictionary<int, int> carnetDepart = new Dictionary<int, int>();
-carnetDepart.Add(404, 0); // Le PID 404 commence à 0 points
 
-// On donne le carnet au Nœud (C'est le 3ème ingrédient)
-Node depart = new Node(0, 404, carnetDepart, 0, 130, "Demarrage de l'attaque", null);
+Random generateurAleatoire = new Random();
+ 
+for (int i = 1; i <= 100; i++)
+{
+    int suspicionAleatoire = generateurAleatoire.Next(5, 31);
+    
+    carnetDepart.Add(i, suspicionAleatoire);
+}
 
+Node depart = new Node(0, 1, carnetDepart, 0, 130, "Demarrage de l'attaque sur PID 1", null);
 
 AStarSolver solveur = new AStarSolver();
-
 Node victoire = solveur.FindBestPath(depart);
 
 if (victoire != null)
@@ -57,5 +64,6 @@ else
     Console.WriteLine("ECHEC : Aucun chemin furtif n'est possible.");
 }
 Console.WriteLine("=================================");
+// ==========================================
 
 app.Run();
