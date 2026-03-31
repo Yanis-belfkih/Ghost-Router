@@ -9,7 +9,9 @@ namespace Ghost_Router.Engine
         public Node FindBestPath(Node startNode)
         {
             List<Node> openSet = new List<Node>();
-            List<string> closedSet = new List<string>(); // Archives des Hashs
+            
+            // OPTIMISATION : HashSet est beaucoup plus rapide que List pour fouiller les codes-barres
+            HashSet<string> closedSet = new HashSet<string>(); 
             
             ActionGenerator generator = new ActionGenerator();
             openSet.Add(startNode);
@@ -18,34 +20,32 @@ namespace Ghost_Router.Engine
             {
                 openSet = openSet.OrderBy(n => n.FCost()).ToList();
                 Node currentNode = openSet[0];
-
                 openSet.Remove(currentNode);
 
-                // Vérification du Hash
+                // Gestion du Hash
                 string currentHash = currentNode.GenerateHash();
-                if (closedSet.Contains(currentHash))
-                {
-                    continue; 
-                }
+                if (closedSet.Contains(currentHash)) continue; 
                 closedSet.Add(currentHash);
 
                 // Condition de victoire
-                if (currentNode.CurrentStep == 3)
-                {
-                    return currentNode;
-                }
+                if (currentNode.CurrentStep == 3) return currentNode;
 
-                List<Node> neighbors = generator.GetNeighbors(currentNode);
-
-                foreach (Node neighbor in neighbors)
-                {
-                    if (!closedSet.Contains(neighbor.GenerateHash()))
-                    {
-                        openSet.Add(neighbor);
-                    }
-                }
+                // On délègue le travail des voisins à une petite méthode
+                ProcessNeighbors(currentNode, generator, openSet, closedSet);
             }
             return null; 
+        }
+
+        private void ProcessNeighbors(Node currentNode, ActionGenerator generator, List<Node> openSet, HashSet<string> closedSet)
+        {
+            List<Node> neighbors = generator.GetNeighbors(currentNode);
+            foreach (Node neighbor in neighbors)
+            {
+                if (!closedSet.Contains(neighbor.GenerateHash()))
+                {
+                    openSet.Add(neighbor);
+                }
+            }
         }
 
         public List<string> GetTimeline(Node endNode)
@@ -55,8 +55,7 @@ namespace Ghost_Router.Engine
 
             while (current != null)
             {
-                string phrase = $"Etape {current.CurrentStep} | PID Actif: {current.ActivePID} | Suspicion locale: {current.ProcessGauges[current.ActivePID]}/100 | Bruit Global: {current.GCost} | Action: {current.ActionTaken}";
-                timeline.Add(phrase);
+                timeline.Add($"Etape {current.CurrentStep} | PID Actif: {current.ActivePID} | Suspicion: {current.ProcessGauges[current.ActivePID]}/100 | Bruit Global: {current.GCost} | Action: {current.ActionTaken}");
                 current = current.Parent;
             }
 

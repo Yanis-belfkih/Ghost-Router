@@ -7,45 +7,38 @@ namespace Ghost_Router.Models
     {
         public int CurrentStep { get; set; }
         public int ActivePID { get; set; }
-        
         public Dictionary<int, int> ProcessGauges { get; set; } 
-        
         public int GCost { get; set; } 
         public int HCost { get; set; } 
-        
         public string ActionTaken { get; set; }
         public Node Parent { get; set; }
 
-        public int FCost() 
-        {
-            return GCost + HCost;
-        }
+        public int FCost() => GCost + HCost;
 
         public Node(int step, int pid, Dictionary<int, int> oldGauges, int gCost, int hCost, string action, Node parentNode)
         {
-            this.CurrentStep = step;
-            this.ActivePID = pid;
-            
-            this.ProcessGauges = new Dictionary<int, int>(oldGauges);
-            
-            this.GCost = gCost;
-            this.HCost = hCost;
-            
-            this.ActionTaken = action;
-            this.Parent = parentNode;
+            CurrentStep = step;
+            ActivePID = pid;
+            ProcessGauges = new Dictionary<int, int>(oldGauges);
+            GCost = gCost;
+            HCost = hCost;
+            ActionTaken = action;
+            Parent = parentNode;
         }
 
-        public string GenerateHash() 
+        public string GenerateHash()
         {
-            string codeBarres = $"Step{CurrentStep}_PID_Active{ActivePID}_[";
-            
+            return $"Step{CurrentStep}_Active{ActivePID}_[{GetSortedGaugesText()}]";
+        }
+
+        private string GetSortedGaugesText()
+        {
             List<int> pidsTries = ProcessGauges.Keys.OrderBy(pid => pid).ToList();
-            
             string jaugesTexte = "";
+            
             foreach (int pid in pidsTries)
             {
-                int suspicion = ProcessGauges[pid];
-                jaugesTexte += $"{pid}:{suspicion}|";
+                jaugesTexte += $"{pid}:{ProcessGauges[pid]}|";
             }
             
             if (jaugesTexte.EndsWith("|")) 
@@ -53,8 +46,7 @@ namespace Ghost_Router.Models
                 jaugesTexte = jaugesTexte.Substring(0, jaugesTexte.Length - 1);
             }
             
-            codeBarres += jaugesTexte + "]";
-            return codeBarres;
+            return jaugesTexte;
         }
     }
 }
