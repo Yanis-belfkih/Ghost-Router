@@ -1,6 +1,0 @@
-@Ghost_Router_HostAddress = http://localhost:5094
-
-GET {{Ghost_Router_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

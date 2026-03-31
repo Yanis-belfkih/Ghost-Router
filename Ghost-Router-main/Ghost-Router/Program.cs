@@ -28,7 +28,13 @@ Console.WriteLine("=================================");
 Console.WriteLine("Lancement de l'IA Ghost-Router...");
 Console.WriteLine("=================================");
 
-Node depart = new Node(0, 404, 0, 0, 130, "Demarrage de l'attaque", null);
+// On fabrique le tout premier carnet
+Dictionary<int, int> carnetDepart = new Dictionary<int, int>();
+carnetDepart.Add(404, 0); // Le PID 404 commence à 0 points
+
+// On donne le carnet au Nœud (C'est le 3ème ingrédient)
+Node depart = new Node(0, 404, carnetDepart, 0, 130, "Demarrage de l'attaque", null);
+
 
 AStarSolver solveur = new AStarSolver();
 
