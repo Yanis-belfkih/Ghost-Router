@@ -6,7 +6,7 @@ namespace Ghost_Router.Engine
 {
     public class ActionGenerator
     {
-        // --- CONSTANTES GLOBALES (On centralise les règles de l'EDR) ---
+        
         public const int MAX_SUSPICION = 100;
         
         public const int COST_ALLOC = 35;
@@ -16,7 +16,7 @@ namespace Ghost_Router.Engine
         public const int HOP_LOCAL_PENALTY = 10;
         public const int HOP_GLOBAL_COST = 15;
 
-        // --- METHODE PRINCIPALE ---
+        
         public List<Node> GetNeighbors(Node currentNode)
         {
             List<Node> neighbors = new List<Node>();
@@ -27,7 +27,7 @@ namespace Ghost_Router.Engine
             return neighbors;
         }
 
-        // --- SOUS-METHODE 1 : Action directe (avec SWITCH) ---
+        
         private void TryAddDirectAction(Node currentNode, List<Node> neighbors)
         {
             int pid = currentNode.ActivePID;
@@ -50,8 +50,8 @@ namespace Ghost_Router.Engine
             }
         }
 
-        // --- SOUS-METHODE 2 : Le Process Hopping ---
-        private void TryAddEvasionAction(Node currentNode, List<Node> neighbors)
+        
+        private void TryAddEvasionAction(Node currentNode, List<Node> neighbors) // Process Hopping
         {
             int pid = currentNode.ActivePID;
             int suspicion = currentNode.ProcessGauges[pid];
@@ -68,7 +68,7 @@ namespace Ghost_Router.Engine
             }
         }
 
-        // --- OUTILS INTERNES ---
+        
         private int GetRandomAvailablePid(Node currentNode)
         {
             Random rand = new Random();
@@ -95,4 +95,4 @@ namespace Ghost_Router.Engine
             }
         }
     }
-}s
+}

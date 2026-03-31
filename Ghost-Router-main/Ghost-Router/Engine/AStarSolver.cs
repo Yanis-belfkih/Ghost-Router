@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.Linq; 
 using Ghost_Router.Models;
+using System.Threading; // pour le CancelToken
+using System.Runtime.CompilerServices; // pour lier le cancelToken au IAsyncEnumerable
+
 
 namespace Ghost_Router.Engine
 {
     public class AStarSolver
     {
-        public Node FindBestPath(Node startNode)
+        public async IAsyncEnumerable<Node> FindBestPath(Node startNode, [EnumeratorCancellation] CancellationToken cancelToken) // IAsyncEnumerable sert de tapis roulant qui envoie les nodes les uns apres les autres 
         {
             List<Node> openSet = new List<Node>();
             
@@ -16,24 +19,28 @@ namespace Ghost_Router.Engine
             ActionGenerator generator = new ActionGenerator();
             openSet.Add(startNode);
 
-            while (openSet.Count > 0)
+            while (openSet.Count > 0) 
             {
+                cancelToken.ThrowIfCancellationRequested(); // si le token est annulé, on arrete la simulation , on utillise ThrowIfCancellationRequested() car on utilise CancellationToken
+
                 openSet = openSet.OrderBy(n => n.FCost()).ToList();
                 Node currentNode = openSet[0];
                 openSet.Remove(currentNode);
+
 
                 // Gestion du Hash
                 string currentHash = currentNode.GenerateHash();
                 if (closedSet.Contains(currentHash)) continue; 
                 closedSet.Add(currentHash);
 
-                // Condition de victoire
-                if (currentNode.CurrentStep == 3) return currentNode;
+                yield return currentNode; // on envoie le node au client au fur est a mesure 
+
+                if (currentNode.CurrentStep == 3) yield break;// yield break
 
                 // On délègue le travail des voisins à une petite méthode
                 ProcessNeighbors(currentNode, generator, openSet, closedSet);
             }
-            return null; 
+            yield break;// au lieu de return null on yield break car on est dans un IEnumerable
         }
 
         private void ProcessNeighbors(Node currentNode, ActionGenerator generator, List<Node> openSet, HashSet<string> closedSet)
