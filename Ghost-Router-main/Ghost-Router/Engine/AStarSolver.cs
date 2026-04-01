@@ -9,14 +9,19 @@ namespace Ghost_Router.Engine
 {
     public class AStarSolver
     {
+        private string _configEDR;
+        private HashSet<string> closedSet = new HashSet<string>(); //OPTIMISATION : HashSet est beaucoup plus rapide que List pour fouiller les codes-barres
+        private ActionGenerator generator;
+        private List<Node> openSet = new List<Node>();
+        private List<string> timeline = new List<string>();
+
+        public AStarSolver(string configEDR)
+        {
+            _configEDR = configEDR;
+            generator = new ActionGenerator(_configEDR);
+        }
         public async IAsyncEnumerable<Node> FindBestPath(Node startNode, [EnumeratorCancellation] CancellationToken cancelToken) // IAsyncEnumerable sert de tapis roulant qui envoie les nodes les uns apres les autres 
         {
-            List<Node> openSet = new List<Node>();
-            
-            // OPTIMISATION : HashSet est beaucoup plus rapide que List pour fouiller les codes-barres
-            HashSet<string> closedSet = new HashSet<string>(); 
-            
-            ActionGenerator generator = new ActionGenerator();
             openSet.Add(startNode);
 
             while (openSet.Count > 0) 
@@ -57,8 +62,8 @@ namespace Ghost_Router.Engine
 
         public List<string> GetTimeline(Node endNode)
         {
-            List<string> timeline = new List<string>();
-            Node current = endNode;
+            timeline.Clear();
+            Node? current = endNode;
 
             while (current != null)
             {

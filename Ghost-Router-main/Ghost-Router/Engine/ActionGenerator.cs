@@ -7,8 +7,9 @@ namespace Ghost_Router.Engine
     public class ActionGenerator
     {
         
-        public const int MAX_SUSPICION = 100;
+        public int MAX_SUSPICION;
         
+
         public const int COST_ALLOC = 35;
         public const int COST_WRITE = 45;
         public const int COST_EXEC = 50;
@@ -16,7 +17,27 @@ namespace Ghost_Router.Engine
         public const int HOP_LOCAL_PENALTY = 10;
         public const int HOP_GLOBAL_COST = 15;
 
-        
+        private string _configEDR;
+
+        public ActionGenerator(string configEDR){
+            _configEDR = configEDR;
+            SetConfigEDR();
+        }
+
+        private void SetConfigEDR(){
+            switch(_configEDR){
+                case "Strict":
+                    MAX_SUSPICION = 90;
+                    break;
+                case "Permissive":
+                    MAX_SUSPICION = 100;
+                    break;
+                default:
+                    MAX_SUSPICION = 100;
+                    break;
+            }   
+        }
+
         public List<Node> GetNeighbors(Node currentNode)
         {
             List<Node> neighbors = new List<Node>();
